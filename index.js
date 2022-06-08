@@ -1,56 +1,22 @@
-// const fs = require('fs')
-// const path = require("path");
-//
-// const sortFolder = (read, gender, write) => {
-//     // path.join(__dirname, read) -- путь к каталогу, из
-//     //                              которого нужно прочитать содержимое
-//     fs.readdir(path.join(__dirname, read), (err, files) => {
-//         if (err) return console.log(err)
-//     // files -- это массив объектов String, Buffer
-//     //          или fs.Dirent, содержащих файлы в каталоге.
-//         files.forEach((file) => {
-//             const readFolderPath = path.join(__dirname, read, file)
-//             // console.log(__dirname+'./boys/'+file)
-//             // console.log(path.join(__dirname, 'boys', file))
-//             fs.readFile(readFolderPath, (err, data) => {
-//                 if (err) return console.log(err)
-//
-//                 const user = JSON.parse(data.toString())
-//
-//                 if (user.gender === gender) {
-//                     fs.rename(readFolderPath, path.join(__dirname, write, file), err => {
-//                         console.log(err)
-//                     })
-//                 }
-//             })
-//         })
-//
-//     })
-// }
-// sortFolder('girls', 'male', 'boys')
-// sortFolder('boys', 'female', 'girls')
-
-// promises
 const fs = require('fs/promises')
 const path = require('path')
 
-const sortFolder = async (read, gender, write) => {
+const reader = async (read) => {
     try {
-        const files = await fs.readdir(path.join(__dirname, read))
+        const files = await fs.readdir(read)
 
         for (const file of files) {
-            const readFolderPath = path.join(__dirname, read, file)
-            const data = await fs.readFile(readFolderPath)
-            const user = JSON.parse(data.toString())
+            let stat = await fs.stat(path.join(read, file));
 
-            if (user.gender === gender) {
-                await fs.rename(readFolderPath, path.join(__dirname, write, file))
+            if (stat.isFile()) {
+                await fs.rename(path.join(read, file), path.join(__dirname, 'ExitFolder', file))
+            }
+            if (stat.isDirectory()) {
+                await reader(path.join(read, file))
             }
         }
-    }catch (e) {
+    } catch (e) {
         console.error(e)
     }
 }
-
-sortFolder('girls', 'male', 'boys')
-sortFolder('boys', 'female', 'girls')
+reader(path.join(__dirname, 'FolderForRead'))
