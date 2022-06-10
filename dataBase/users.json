@@ -1,1 +1,17 @@
-[{"name":"user1","age":20,"id":1},{"name":"user3","age":20,"id":3},{"name":"user2","age":21,"id":2}]
+[
+  {
+    "name": "user1",
+    "age": 20,
+    "id": 1
+  },
+  {
+    "name": "user2",
+    "age": 21,
+    "id": 2
+  },
+  {
+    "name": "user3",
+    "age": 20,
+    "id": 3
+  }
+]
