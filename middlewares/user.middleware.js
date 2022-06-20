@@ -18,21 +18,21 @@ module.exports = {
         }
     },
 
-    // isUserUniq: async (req, res, next) => {
-    //     try {
-    //         const { email } = req.body;
-    //
-    //         const user = await userService.findOneUser({ email });
-    //         if (user) {
-    //             return next(new CustomError(`User with email ${email} is exist`, 409));
-    //         }
-    //
-    //         req.user = user;
-    //         next();
-    //     } catch (e) {
-    //         next(e);
-    //     }
-    // },
+    isUserUniq: async (req, res, next) => {
+        try {
+            const { email } = req.body;
+
+            const user = await userService.findOneUser({ email });
+            if (user) {
+                return next(new CustomError(`User with email ${email} is exist`, 409));
+            }
+
+            req.user = user;
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
 
     isUserValidForCreate: async (req, res, next) => {
         try {
@@ -60,22 +60,22 @@ module.exports = {
         }
     },
 
-    // isUserValidForUpdate: async (req, res, next) => {
-    //     try {
-    //         const { name, age } = req.body;
-    //
-    //         if (age && !Number.isInteger(age) || age < 18) {
-    //             return res.status(400).json('Set valid age');
-    //         }
-    //
-    //         if (name && name.length < 3) {
-    //             return res.status(400).json('Set valid name');
-    //         }
-    //
-    //         req.dateForUpdate = { name, age };
-    //         next();
-    //     } catch (e) {
-    //         next(e);
-    //     }
-    // }
+    isUserValidForUpdate: async (req, res, next) => {
+        try {
+            const { name, age } = req.body;
+
+            if (age && !Number.isInteger(age) || age < 18) {
+                return res.status(400).json('Set valid age');
+            }
+
+            if (name && name.length < 3) {
+                return res.status(400).json('Set valid name');
+            }
+
+            req.dateForUpdate = { name, age };
+            next();
+        } catch (e) {
+            next(e);
+        }
+    }
 };
