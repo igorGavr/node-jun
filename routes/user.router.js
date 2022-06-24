@@ -4,7 +4,9 @@ const {userController} = require("../controllers");
 const {commonMiddleware, userMiddleware} = require("../middlewares");
 
 
-router.get('/', userController.allUsers)
+router.get('/',
+    userMiddleware.isUserQueryValid,
+    userController.allUsers)
 router.post('/',
     userMiddleware.isUserValidForCreate,
     userMiddleware.isUserUniq,
