@@ -15,7 +15,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 
-const {userRouter} = require("./routes");
+const {authRouter, userRouter } = require("./routes");
 const { configs } = require('./configs');
 
 mongoose.connect(configs.MONGO_URL)
@@ -23,6 +23,7 @@ mongoose.connect(configs.MONGO_URL)
 const app = express()
 app.use(express.json())  // вчу апку розпізнавати json
 
+app.use('/auth', authRouter);
 app.use('/users', userRouter)
 
 app.use('*', (req, res) => {
