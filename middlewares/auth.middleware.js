@@ -2,11 +2,14 @@ const { checkAccessToken, checkToken} = require("../services/token.service");
 const { OAuth } = require("../dataBase");
 const { CustomError } = require('../errors');
 const { userService } = require('../services');
+const { authValidator } = require("../validators");
+const { tokenTypeEnum } = require("../enums");
+const { constants } = require("../configs");
 
 module.exports = {
     checkAccessToken: async (req, res, next) => {
         try {
-            const access_token = req.get('Authorization');
+            const access_token = req.get(constants.AUTHORIZATION);
 
             if (!access_token) {
                 return next(new CustomError('No token', 401));
@@ -23,6 +26,7 @@ module.exports = {
                 return next(new CustomError('Token not valid', 401));
             }
 
+            req.access_token = tokenInfo.access_token;
             req.user = tokenInfo.userId;
             next();
         } catch (e) {
@@ -49,13 +53,13 @@ module.exports = {
 
     checkRefreshToken: async (req, res, next) => {
         try {
-            const refresh_token = req.get('Authorization');
+            const refresh_token = req.get(constants.AUTHORIZATION);
 
             if (!refresh_token) {
                 return next(new CustomError('No token', 401));
             }
             console.log(refresh_token)
-            checkToken(refresh_token, 'refresh');
+            checkToken(refresh_token, tokenTypeEnum.REFRESH);
 
             const tokenInfo = await OAuth
                 .findOne({ refresh_token });
@@ -65,6 +69,23 @@ module.exports = {
             }
 
             req.tokenInfo = tokenInfo;
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+
+    isLoginBodyValid: async (req, res, next) => {
+        try {
+
+            const {error, value} = await authValidator.login.validate(req.body);
+
+            if (error) {
+                return next(new CustomError('Wrong email or password'));
+            }
+
+            req.body = value;
             next();
         } catch (e) {
             next(e);
