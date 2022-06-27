@@ -42,7 +42,7 @@ module.exports = {
 
     updateUserById: async (req, res, next) => {
         try{
-            const { id } = req.params;
+            const { id } = req.params;  // оновлюємо дані юзера по айдішці
             const updatedUser = await userService.updateOneUser({ _id: id }, req.body);
             const userForResponse = userPresenter(updatedUser)
             res.status(201).json(userForResponse);

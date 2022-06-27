@@ -13,6 +13,7 @@ module.exports = {
     createUser: (user) => {
         return User.create(user)
     },
+    // options = {new: true} - дозволяє повертати оновлені дані
     updateOneUser: (params, userData, options = {new: true}) => {
         return User.findOneAndUpdate(params, userData, options);
     },

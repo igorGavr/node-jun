@@ -18,11 +18,11 @@ router.get('/:id',                  // обробник на /users/:id для �
     userController.getUserById)
 router.put('/:id',                   // обробник на /users/:id для оновлення даних юзера
     commonMiddleware.isIdValid,
-    authMiddleware.checkAccessToken,
-    userMiddleware.isUserValidForUpdate,
-    userMiddleware.isUserPresent,
-    userController.updateUserById)
-router.delete('/:id',                 // обробник на /users
+    authMiddleware.checkAccessToken,      // перевіряємо токен та дістаємо інфу про юзера з табл. User
+    userMiddleware.isUserValidForUpdate,  // валідуємо дані про юзера - name, age
+    userMiddleware.isUserPresent,         // перевіряємо чи присутній юзер в базі
+    userController.updateUserById)        // оновлення даних юзера
+router.delete('/:id',                 // обробник на /users/:id для видалення юзера
     commonMiddleware.isIdValid,
     authMiddleware.checkAccessToken,
     userMiddleware.isUserPresent,

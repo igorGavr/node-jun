@@ -28,7 +28,7 @@ module.exports = {
             }
 
             req.access_token = tokenInfo.access_token; // розширюємо req та передаємо access_token
-            req.user = tokenInfo.userId;
+            req.user = tokenInfo.userId;               // передаємо дані про юзера
             next();
         } catch (e) {
             next(e);
