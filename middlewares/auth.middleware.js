@@ -9,24 +9,25 @@ const { constants } = require("../configs");
 module.exports = {
     checkAccessToken: async (req, res, next) => {
         try {
+            // дістаємо access токен з Хедерів
             const access_token = req.get(constants.AUTHORIZATION);
 
             if (!access_token) {
                 return next(new CustomError('No token', 401));
             }
-
+            // перевіряємо токен
             checkToken(access_token);
 
-            const tokenInfo = await OAuth
-                .findOne({ access_token })
-                .populate('userId');
-            console.log(tokenInfo)
+            const tokenInfo = await OAuth        // методом populate
+                .findOne({ access_token })  // ми приєднюємо до таблички Oauth
+                .populate('userId');        // інфу з таблички User по полю userId
+
 
             if (!tokenInfo) {
                 return next(new CustomError('Token not valid', 401));
             }
 
-            req.access_token = tokenInfo.access_token;
+            req.access_token = tokenInfo.access_token; // розширюємо req та передаємо access_token
             req.user = tokenInfo.userId;
             next();
         } catch (e) {
@@ -37,14 +38,14 @@ module.exports = {
     isUserPresentForAuth: async (req, res, next) => {
         try {
             const {email} = req.body;
-
+            // шукаємо нашого користувача по емейлу
             const user = await userService.findOneUser({ email });
 
             if (!user) {
                 return next(new CustomError('Wrong email or password'));
             }
 
-            req.user = user;
+            req.user = user;  // передаємо дальше
             next();
         } catch (e) {
             next(e);
@@ -53,22 +54,23 @@ module.exports = {
 
     checkRefreshToken: async (req, res, next) => {
         try {
-            const refresh_token = req.get(constants.AUTHORIZATION);
+            const refresh_token = req.get(constants.AUTHORIZATION); // витягуємо refresh токен
 
             if (!refresh_token) {
                 return next(new CustomError('No token', 401));
             }
-            console.log(refresh_token)
+            // перевіряємо refresh_token
             checkToken(refresh_token, tokenTypeEnum.REFRESH);
-
+            // шукаємо в базі в табличці OAuth інфу по refresh_token
+            // tokenInfo має поля :_id, userId, access_token, refresh_token
             const tokenInfo = await OAuth
                 .findOne({ refresh_token });
-
+            console.log(`checkRefreshToken -${tokenInfo}`)
             if (!tokenInfo) {
                 return next(new CustomError('Token not valid', 401));
             }
 
-            req.tokenInfo = tokenInfo;
+            req.tokenInfo = tokenInfo; // передіємо інфу дальше
             next();
         } catch (e) {
             next(e);
@@ -78,7 +80,7 @@ module.exports = {
 
     isLoginBodyValid: async (req, res, next) => {
         try {
-
+            // робимо валідацію емейла та пароля
             const {error, value} = await authValidator.login.validate(req.body);
 
             if (error) {

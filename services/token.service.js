@@ -19,7 +19,7 @@ function checkToken(token = '', tokenType = tokenTypeEnum.ACCESS) {
         let secret;
         if (tokenType === tokenTypeEnum.ACCESS) secret = configs.ACCESS_TOKEN_SECRET;
         if (tokenType === tokenTypeEnum.REFRESH) secret = configs.REFRESH_TOKEN_SECRET;
-        return jwt.verify(token, secret);
+        return jwt.verify(token, secret); // перевіряємо токен по кодовому слову
     } catch (e) {
         throw new CustomError(`Token not valid`, 401);
     }

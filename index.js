@@ -18,17 +18,18 @@ const mongoose = require('mongoose')
 const {authRouter, userRouter } = require("./routes");
 const { configs } = require('./configs');
 
-mongoose.connect(configs.MONGO_URL)
+mongoose.connect(configs.MONGO_URL)   // підключаємося до бази данних
 
-const app = express()
+const app = express()    // створюємо апку(сервер)
 app.use(express.json())  // вчу апку розпізнавати json
 
-app.use('/auth', authRouter);
-app.use('/users', userRouter)
+app.use('/auth', authRouter);  // підключаємо роутер який буде обробляти всі запити на /auth
+app.use('/users', userRouter)  // підключаємо роутер який буде обробляти всі запити на /users
 
-app.use('*', (req, res) => {
+app.use('*', (req, res) => {   // якщо шлях не знайдено то видаємо 404-тий статус
     res.status(404).json('Page not found (');
 })
+// сюди вилітають помилки з next(e)
 app.use((err, req, res, next) => {
     res
         .status(err.status || 500)
@@ -38,6 +39,6 @@ app.use((err, req, res, next) => {
         })
 })
 
-app.listen(configs.PORT, () => {
+app.listen(configs.PORT, () => {  // налаштовуємо порт який  будемо слухати
     console.log(`Started on port ${configs.PORT}`)
 })

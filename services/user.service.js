@@ -6,7 +6,8 @@ module.exports = {
     },
 
     findOneUser: (params = {}) => {
-        return User.findOne(params)
+        return User.findOne(params)  // звертаємося до нашої бази юзерів
+        // і шукаємо нашого юзера по params(email)
     },
 
     createUser: (user) => {

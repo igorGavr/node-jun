@@ -28,7 +28,6 @@ module.exports = {
                 return next(new CustomError(`User with email ${email} is exist`, 409));
             }
 
-            req.user = user;
             next();
         } catch (e) {
             next(e);
@@ -37,6 +36,7 @@ module.exports = {
 
     isUserValidForCreate: async (req, res, next) => {
         try {
+            // валідуємо нового Юзера
             const {error, value} = userValidator.newUserValidator.validate(req.body)
             if (error) {
                 return next(new CustomError(error.details[0].message))
@@ -65,6 +65,7 @@ module.exports = {
 
     isUserQueryValid: async (req, res, next) => {
         try {
+            // валідуємо query params : name, age, email
             const {error, value} = userQueryValidator.findAll.validate(req.query)
             if (error) {
                 return next(new CustomError(error.details[0].message))
