@@ -1,4 +1,4 @@
-const { passwordService } = require('../services');
+const { passwordService, emailService} = require('../services');
 const { generateAuthTokens } = require('../services/token.service');
 const { OAuth } = require('../dataBase');
 const {login} = require("../validators/auth.validator");
@@ -8,6 +8,9 @@ module.exports = {
         try {
             const { password: hashPassword, _id } = req.user;
             const { password } = req.body;
+
+            await emailService.sendEmail();
+
             // порівюємо Хеш-пароль та звичайний пароль
             await passwordService.comparePassword(hashPassword, password);
             // якщо паролі збігаються то генеруємо access та refresh токени за допомогою бібліотеки jsonwebtoken

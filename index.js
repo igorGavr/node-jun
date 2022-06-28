@@ -12,6 +12,7 @@
 // В основном он используется для настройки промежуточного
 // программного обеспечения для вашего приложения.
 
+require('dotenv').config(); // для підключення змінних з .env файлу
 const express = require('express')
 const mongoose = require('mongoose')
 
