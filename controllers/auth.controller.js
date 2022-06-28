@@ -1,15 +1,19 @@
 const { passwordService, emailService} = require('../services');
 const { generateAuthTokens } = require('../services/token.service');
 const { OAuth } = require('../dataBase');
-const {login} = require("../validators/auth.validator");
+const { login } = require("../validators/auth.validator");
+const { WELCOME } = require('../configs/email-action.enum')
 
 module.exports = {
     login: async (req, res, next) => {
         try {
-            const { password: hashPassword, _id } = req.user;
+            const { password: hashPassword, _id, name } = req.user;
             const { password } = req.body;
 
-            await emailService.sendEmail();
+            // посилаємо емейл на адресу                 кому ,       назва темплейту,    зміні які є в темплейті
+            await emailService.sendMail('ragamuffinrogi@gmail.com', WELCOME, {userName: name}); // TEST CODE
+            // await emailService.sendMail(email, WELCOME); // REAL CODE
+
 
             // порівюємо Хеш-пароль та звичайний пароль
             await passwordService.comparePassword(hashPassword, password);

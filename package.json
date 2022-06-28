@@ -6,9 +6,12 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.8",
     "nodemailer": "^6.7.5",
-    "dotenv": "^16.0.1"
+    "dotenv": "^16.0.1",
+    "email-templates": "^9.0.0",
+    "pug": "^3.0.2"
   },
   "devDependencies": {
-    "@types/nodemailer": "^6.4.4"
+    "@types/nodemailer": "^6.4.4",
+    "@types/email-templates": "^8.0.4"
   }
 }
