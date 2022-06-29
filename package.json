@@ -1,5 +1,6 @@
 {
   "name": "node-jun",
+  "version": "1.0.0",
   "scripts": {
     "start:dev": "MODE=dev nodemon .",
     "start:prod": "MODE=prod node ."
