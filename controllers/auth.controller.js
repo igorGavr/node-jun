@@ -2,17 +2,13 @@ const { passwordService, emailService} = require('../services');
 const { generateAuthTokens } = require('../services/token.service');
 const { OAuth } = require('../dataBase');
 const { login } = require("../validators/auth.validator");
-const { WELCOME } = require('../configs/email-action.enum')
+const { emailActionTypeEnum } = require('../enums')
 
 module.exports = {
     login: async (req, res, next) => {
         try {
-            const { password: hashPassword, _id, name } = req.user;
+            const { password: hashPassword, _id } = req.user;
             const { password } = req.body;
-
-            // посилаємо емейл на адресу                 кому ,       назва темплейту,    зміні які є в темплейті
-            await emailService.sendMail('ragamuffinrogi@gmail.com', WELCOME, {userName: name}); // TEST CODE
-            // await emailService.sendMail(email, WELCOME); // REAL CODE
 
 
             // порівюємо Хеш-пароль та звичайний пароль
@@ -56,9 +52,12 @@ module.exports = {
 
     logout: async (req, res, next) => {
         try {
-            const { access_token } = req;
+            const { access_token, user } = req;
+            const { email, name } = user
 
             await OAuth.deleteOne({ access_token })
+
+            await emailService.sendMail(email, emailActionTypeEnum.LOGOUT, { name, count: 1 })
 
             res.sendStatus(204);
         } catch (e) {
@@ -68,14 +67,29 @@ module.exports = {
 
 
     logoutAllDevices: async (req, res, next) => {
-    try {
-        const { _id } = req.user;  // з усієї інфи юзера витягуємо Айдішку
+        try {
+            const { _id, email, name } = req.user;  // з усієї інфи юзера витягуємо Айдішку
+    
+            const { deletedCount } = await OAuth.deleteMany({ userId: _id }) // видаляємо всі поля котрі мають таку Айдішку
+            // нам повертається кількість пристроїв яких ми розлогінили
 
-        await OAuth.deleteMany({ userId: _id }) // видаляємо всі поля котрі мають таку Айдішку
+            await emailService.sendMail(email, emailActionTypeEnum.LOGOUT, { name, count: deletedCount })
+            
+            res.sendStatus(204);
+        } catch (e) {
+            next(e)
+        }
+    },
+    
+    forgotPassword: async (req, res, next) => {
+        try {
+            const { email, name } = req.user
 
-        res.sendStatus(204);
-    } catch (e) {
-        next(e)
+            await emailService.sendMail(email, emailActionTypeEnum.FORGOT_PASSWORD, { name })
+
+            res.sendStatus(204)
+        }catch (e) {
+            next(e)
+        }
     }
-},
 };

@@ -22,4 +22,9 @@ router.post('/logoutAllDevices',    // обробник запиту на /logou
     authMiddleware.checkAccessToken,     // перевіряємо токен
     authController.logoutAllDevices);    // видаляємо всі поля в табл. OAuth котрі мають Айді нашого Юзера
 
+router.post('/forgotPassword',
+    authMiddleware.isEmailValid,
+    authMiddleware.isUserPresentByEmail,
+    authController.forgotPassword);
+
 module.exports = router;

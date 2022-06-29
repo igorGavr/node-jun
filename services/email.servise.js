@@ -1,43 +1,49 @@
 const nodemailer = require('nodemailer');
-const EmailTemplates = require('email-templates');
+const hbs = require('nodemailer-express-handlebars');
 const path = require('path');
 
-const { NO_REPLY_EMAIL, NO_REPLY_EMAIL_PASSWORD } = require('../configs/configs');
+const { configs } = require('../configs');
 const emailTemplates = require('../email-templates');
-const CustomError = require("../errors/CustomError");
+const { CustomError } = require("../errors");
 
 module.exports = {
-    sendMail: async (userMail = '', emailAction = '', locals = {}) => {
-        // створюємо екземпляр класу та вказуємо де лежать наші views
-        const templateParser = new EmailTemplates({
-            views: {root: path.join(process.cwd(), 'email-templates')}
+    sendMail: async (userMail = '', emailAction = '', context = {}) => {
+        const transporter = nodemailer.createTransport({
+            from: 'No reply',
+            auth: {
+                user: configs.NO_REPLY_EMAIL,
+                pass: configs.NO_REPLY_EMAIL_PASSWORD,
+            },
+            service: 'gmail',
         });
-        // беремо з emailTemplates наш Template - WELCOME
-        const templateInfo = emailTemplates[emailAction];
 
+        // конфігураційні штуки
+        const hbsOptions = {
+            viewEngine: {
+                extname: '.hbs', // розширення файлів
+                defaultLayout: 'main',
+                layoutsDir: path.join(process.cwd(), 'email-templates', 'layouts'),
+                partialsDir: path.join(process.cwd(), 'email-templates', 'partials'),
+            },
+            viewPath: path.join(process.cwd(), 'email-templates', 'views'),
+            extName: '.hbs',
+        }
+        // підключаємо конфігураційні штуки
+        transporter.use('compile', hbs(hbsOptions));
+
+        const templateInfo = emailTemplates[emailAction];
         if (!templateInfo) {
             throw new CustomError('Wrong email action', 500);
         }
 
-        locals.frontendURL = 'google.com'
+        context.frontendURL = configs.FRONTEND_URL;
 
-        // почикай поки templateParser прорендерить Template - WELCOME
-        const html = await templateParser.render(templateInfo.template, locals);
-
-        // займається відправкою емейлів
-        const transporter = nodemailer.createTransport({
-            auth: {
-                user: NO_REPLY_EMAIL,
-                pass: NO_REPLY_EMAIL_PASSWORD
-            },
-            service: 'gmail'
-        });
-
+        console.log(`Email start sending | email: ${userMail} | action: ${emailAction}`);
         return transporter.sendMail({
-            from: 'No reply',
             to: userMail,
             subject: templateInfo.subject,
-            html
+            template: templateInfo.template,
+            context,   // всі змінні які ми використовуємо в листі
         });
     }
 }

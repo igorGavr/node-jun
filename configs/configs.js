@@ -7,4 +7,6 @@ module.exports = {
 
     NO_REPLY_EMAIL: process.env.NO_REPLY_EMAIL || 'ragamuffinrogi@gmail.com',
     NO_REPLY_EMAIL_PASSWORD: process.env.NO_REPLY_EMAIL_PASSWORD || 'umaginlvdohblvpp',
+
+    FRONTEND_URL: process.env.FRONTEND_URL || 'https://google.com'
 };

@@ -1,18 +1,23 @@
-const emailActions = require('../configs/email-action.enum')
+const { emailActionTypeEnum } = require('../enums')
 
 module.exports = {
-    [emailActions.WELCOME]: {
+    [emailActionTypeEnum.WELCOME]: {
         subject: 'Welcome on board',
         template: 'welcome'  // файл який потрібно прорендерити
     },
 
-    [emailActions.FORGOT_PASSWORD]: {
+    [emailActionTypeEnum.FORGOT_PASSWORD]: {
         subject: 'Oops looks like you forgot password',
         template: 'forgot-password'
     },
 
-    [emailActions.USER_BANNED]: {
+    [emailActionTypeEnum.USER_BANNED]: {
         subject: 'Account was blocked',
         template: 'account-blocked'
-    }
+    },
+
+    [emailActionTypeEnum.LOGOUT]: {
+        subject: 'User was logout',
+        template: 'logout'
+    },
 }
