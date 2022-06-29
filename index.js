@@ -12,12 +12,18 @@
 // В основном он используется для настройки промежуточного
 // программного обеспечения для вашего приложения.
 
-require('dotenv').config(); // для підключення змінних з .env файлу
 const express = require('express')
 const mongoose = require('mongoose')
+const path = require("path");
+// для динамічного підключення .env файлів
+require('dotenv').config({
+    path: path.join(process.cwd(), 'environments', `${process.env.MODE}.env`)});
+// файли .env повинні бути обовязково вище  configs
+
 
 const {authRouter, userRouter } = require("./routes");
 const { configs } = require('./configs');
+
 
 mongoose.connect(configs.MONGO_URL)   // підключаємося до бази данних
 
