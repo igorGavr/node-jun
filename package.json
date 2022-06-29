@@ -2,8 +2,8 @@
   "name": "node-jun",
   "version": "1.0.0",
   "scripts": {
-    "start:dev": "cross-env MODE=dev nodemon .",
-    "start:prod": "MODE=prod node ."
+    "start:dev": "set MODE=dev&& nodemon .",
+    "start:prod": "set MODE=prod&& node ."
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
