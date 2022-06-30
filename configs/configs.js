@@ -4,6 +4,7 @@ module.exports = {
 
     ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET || 'qwe', // КОДОВЕ слово повино бути мін 30 символів
     REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || 'sad',
+    FORGOT_PASS_ACTION_SECRET: process.env.FORGOT_PASS_ACTION_SECRET || 'dsggd',
 
     NO_REPLY_EMAIL: process.env.NO_REPLY_EMAIL || 'ragamuffinrogi@gmail.com',
     NO_REPLY_EMAIL_PASSWORD: process.env.NO_REPLY_EMAIL_PASSWORD || 'umaginlvdohblvpp',

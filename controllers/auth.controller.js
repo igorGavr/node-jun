@@ -1,17 +1,17 @@
 const { passwordService, emailService} = require('../services');
-const { generateAuthTokens } = require('../services/token.service');
+const { generateAuthTokens, generateActionToken} = require('../services/token.service');
 const { OAuth } = require('../dataBase');
 const { login } = require("../validators/auth.validator");
-const { WELCOME } = require('../configs/email-action.enum')
+const { WELCOME, FORGOT_PASSWORD } = require('../configs/email-action.enum')
 
 module.exports = {
     login: async (req, res, next) => {
         try {
-            const { password: hashPassword, _id, name } = req.user;
+            const { password: hashPassword, _id, name, email } = req.user;
             const { password } = req.body;
 
             // посилаємо емейл на адресу                 кому ,       назва темплейту,    зміні які є в темплейті
-            await emailService.sendMail('ragamuffinrogi@gmail.com', WELCOME, {userName: name}); // TEST CODE
+            await emailService.sendMail(email, WELCOME, {userName: name}); // TEST CODE
             // await emailService.sendMail(email, WELCOME); // REAL CODE
 
 
@@ -31,6 +31,24 @@ module.exports = {
                 user: req.user,
                 ...tokens
             });
+        } catch (e) {
+            next(e)
+        }
+    },
+
+    forgotPassword: async (req, res, next) => {
+        try {
+            const { _id, name, email } = req.user;
+
+            const token = generateActionToken(FORGOT_PASSWORD, {name, _id})
+
+
+            // посилаємо емейл на адресу  кому , назва темплейту,  зміні які є в темплейті
+            await emailService.sendMail(email, FORGOT_PASSWORD, {userName: name}); // TEST CODE
+
+
+
+            res.json('Ok');
         } catch (e) {
             next(e)
         }
