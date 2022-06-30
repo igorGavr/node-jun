@@ -39,20 +39,22 @@ module.exports = {
     forgotPassword: async (req, res, next) => {
         try {
             const { _id, name, email } = req.user;
-
+            // генеруємо ActionToken
             const token = generateActionToken(FORGOT_PASSWORD, {name, _id})
-
+            // записуємо в табл. ActionTokens
             await ActionTokens.create({
                 userId: _id,
                 token,
                 actionType: FORGOT_PASSWORD
             })
 
-            // посилаємо емейл на адресу  кому , назва темплейту,  зміні які є в темплейті
+            // посилаємо емейл на адресу
+            // на пошті в листі клікнули на кнопку Відновити Пароль
+            // нас перекинуло на фронтенд де ми ввели новий пароль ,
+            // фронт посилає нам токен(привязаний в Хедерах)
+            // та новий пароль на урлу /password/forgot/set
             await emailService.sendMail(email,
                 FORGOT_PASSWORD, {userName: name, token}); // TEST CODE
-
-
 
             res.json('Ok');
         } catch (e) {

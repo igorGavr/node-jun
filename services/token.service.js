@@ -21,13 +21,13 @@ function generateActionToken(actionType, payload = {}) {
     let expiresIn = '7d';
 
     switch (actionType) {
-        case FORGOT_PASSWORD: secretWord = FORGOT_PASS_ACTION_SECRET;
+        case FORGOT_PASSWORD: secretWord = FORGOT_PASS_ACTION_SECRET; // обираємо секретне слово
         break;
 
         default:
             throw new CustomError('Wrong action type', 500)
     }
-
+    // генеруємо ActionToken
     return jwt.sign(payload, secretWord, {expiresIn})
 }
 
@@ -44,7 +44,7 @@ function checkToken(token = '', tokenType = tokenTypeEnum.ACCESS) {
 
 function checkActionToken(token= '', actionType) {
     let secretWord = '';
-
+    // тут перевіряємо ActionToken по секретному слову
     switch (actionType) {
         case FORGOT_PASSWORD:
             secretWord = FORGOT_PASS_ACTION_SECRET;

@@ -12,11 +12,11 @@ router.post('/login',               // обробник запиту на /login
                                          // та записуємо їх та Айдішку юзера в табличку OAuth
 
 router.post('/password/forgot',
-    authMiddleware.isLoginBodyValid,     // валідація пароля та емейл
+    authMiddleware.isLoginBodyValid,     // валідація пароля
     authMiddleware.isUserPresentForAuth, // пошук Юзера по імейлу
     authController.forgotPassword);
 
-router.post('/password/forgot/set',
+router.post('/password/forgot/set', // фронт йде сюди після отримання нового пароля та ActionToken
     authMiddleware.checkActionToken(FORGOT_PASSWORD),
     authController.setForgotPassword);
 
