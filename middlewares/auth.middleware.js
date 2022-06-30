@@ -1,5 +1,5 @@
-const { checkAccessToken, checkToken} = require("../services/token.service");
-const { OAuth } = require("../dataBase");
+const { checkAccessToken, checkToken, checkActionToken} = require("../services/token.service");
+const { OAuth, ActionTokens} = require("../dataBase");
 const { CustomError } = require('../errors');
 const { userService } = require('../services');
 const { authValidator } = require("../validators");
@@ -29,6 +29,29 @@ module.exports = {
 
             req.access_token = tokenInfo.access_token; // розширюємо req та передаємо access_token
             req.user = tokenInfo.userId;               // передаємо дані про юзера
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    checkActionToken: (actionType) =>  async (req, res, next) => {
+        try {
+            const action_token = req.get('Authorization');
+
+            if (!action_token) {
+                throw new CustomError(`No token`, 401);
+            }
+            checkActionToken(action_token, actionType)
+
+            const tokenInfo = await ActionTokens
+                .findOne({ token: action_token })
+                .populate('userId')
+            if (!tokenInfo){
+                throw new CustomError(`Token not valid`, 401)
+            }
+            req.user = tokenInfo.userId;
+
             next();
         } catch (e) {
             next(e);

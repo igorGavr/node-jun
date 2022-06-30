@@ -42,7 +42,23 @@ function checkToken(token = '', tokenType = tokenTypeEnum.ACCESS) {
     }
 }
 
+function checkActionToken(token= '', actionType) {
+    let secretWord = '';
+
+    switch (actionType) {
+        case FORGOT_PASSWORD:
+            secretWord = FORGOT_PASS_ACTION_SECRET;
+            break;
+
+        default:
+            throw new CustomError('Wrong action type', 500);
+    }
+
+    return jwt.verify(token, secretWord);
+}
+
 module.exports = {
+    checkActionToken,
     checkToken,
     generateActionToken,
     generateAuthTokens

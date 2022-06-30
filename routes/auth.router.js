@@ -2,6 +2,7 @@ const router = require('express').Router();
 
 const { authController } = require('../controllers');
 const { authMiddleware } = require('../middlewares');
+const {FORGOT_PASSWORD} = require("../configs/email-action.enum");
 
 
 router.post('/login',               // обробник запиту на /login
@@ -10,10 +11,14 @@ router.post('/login',               // обробник запиту на /login
     authController.login);               // порівнюємо паролі , генеруємо пару токенів
                                          // та записуємо їх та Айдішку юзера в табличку OAuth
 
-router.post('/forgot/password',
+router.post('/password/forgot',
     authMiddleware.isLoginBodyValid,     // валідація пароля та емейл
     authMiddleware.isUserPresentForAuth, // пошук Юзера по імейлу
     authController.forgotPassword);
+
+router.post('/password/forgot/set',
+    authMiddleware.checkActionToken(FORGOT_PASSWORD),
+    authController.setForgotPassword);
 
 
 router.post('/refresh',             // обробник запиту на /refresh

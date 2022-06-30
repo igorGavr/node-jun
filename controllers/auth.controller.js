@@ -1,6 +1,6 @@
 const { passwordService, emailService} = require('../services');
 const { generateAuthTokens, generateActionToken} = require('../services/token.service');
-const { OAuth } = require('../dataBase');
+const { OAuth, ActionTokens, User} = require('../dataBase');
 const { login } = require("../validators/auth.validator");
 const { WELCOME, FORGOT_PASSWORD } = require('../configs/email-action.enum')
 
@@ -42,13 +42,36 @@ module.exports = {
 
             const token = generateActionToken(FORGOT_PASSWORD, {name, _id})
 
+            await ActionTokens.create({
+                userId: _id,
+                token,
+                actionType: FORGOT_PASSWORD
+            })
 
             // посилаємо емейл на адресу  кому , назва темплейту,  зміні які є в темплейті
-            await emailService.sendMail(email, FORGOT_PASSWORD, {userName: name}); // TEST CODE
+            await emailService.sendMail(email,
+                FORGOT_PASSWORD, {userName: name, token}); // TEST CODE
 
 
 
             res.json('Ok');
+        } catch (e) {
+            next(e)
+        }
+    },
+
+    setForgotPassword: async (req, res, next) => {
+        try {
+            const { _id } = req.user;
+            const { password } = req.body;
+
+            const hashPassword = await passwordService.hashPassword(password);
+            const updatedUser = await User
+                .findByIdAndUpdate(_id, { password: hashPassword }, {new: true});
+
+            await ActionTokens.deleteOne({actionType: FORGOT_PASSWORD, userId: _id})
+
+            res.json(updatedUser)
         } catch (e) {
             next(e)
         }
