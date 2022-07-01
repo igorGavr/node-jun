@@ -1,5 +1,7 @@
-const {userService, passwordService} = require("../services");
+const {userService, passwordService, smsService} = require("../services");
 const {userPresenter} = require("../presenters/user.presenter");
+const {smsTemplateBuilder} = require("../common");
+const {smsActionTypeEnum} = require("../enums");
 
 module.exports = {
     allUsers: async (req, res, next) => {
@@ -16,11 +18,17 @@ module.exports = {
 
     createUser: async (req, res, next) => {
         try{
+            const { password, phone, name } = req.body;
             // хешуємо пароль
-            const hash = await passwordService.hashPassword(req.body.password)
+            const hash = await passwordService.hashPassword(password)
 
             // записуємо нового юзера в табл. User перетираючи пароль захешованим паролем
             const newUser = await userService.createUser({...req.body, password: hash})
+
+            const sms = smsTemplateBuilder[smsActionTypeEnum.WELCOME](name);
+
+            await smsService.sendSMS(phone, sms)
+
             // віддаємо нового юзера згідно шаблону
             const userForResponse = userPresenter(newUser)
             res.status(201).json(userForResponse)

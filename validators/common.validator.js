@@ -10,5 +10,7 @@ module.exports = {
     emailValidator: Joi.string().regex(constants.EMAIL_REGEX)
         .lowercase().trim(),
     passwordValidator: Joi.string()
-        .regex(constants.PASSWORD_REGEX).required().trim()
+        .regex(constants.PASSWORD_REGEX).required().trim(),
+    phoneValidator: Joi.string()
+        .regex(constants.PHONE_REGEX).required().trim(),
 };

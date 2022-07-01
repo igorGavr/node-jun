@@ -16,7 +16,8 @@
     "mongoose": "^6.3.8",
     "nodemailer": "^6.7.5",
     "nodemon": "^2.0.18",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "twilio": "^3.78.0"
   },
   "devDependencies": {
     "@types/email-templates": "^8.0.4",
