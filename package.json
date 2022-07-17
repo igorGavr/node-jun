@@ -2,6 +2,7 @@
   "name": "node-jun",
   "version": "1.0.0",
   "scripts": {
+    "start": "node .",
     "start:dev": "set MODE=dev&& nodemon .",
     "start:prod": "set MODE=prod&& node ."
   },
