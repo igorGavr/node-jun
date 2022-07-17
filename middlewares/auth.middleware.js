@@ -105,10 +105,10 @@ module.exports = {
     isLoginBodyValid: async (req, res, next) => {
         try {
             // робимо валідацію емейла та пароля
-            const {error, value} = await authValidator.password.validate(req.body);
+            const {error, value} = await authValidator.login.validate(req.body);
 
             if (error) {
-                return next(new CustomError('Wrong email or password'));
+                return next(new CustomError('Wrong email or password '));
             }
 
             req.body = value;

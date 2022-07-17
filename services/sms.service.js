@@ -14,8 +14,8 @@ module.exports = {
                     to: phone,
                     body: message,
                 });
-            console.log(smsInfo)
-            console.log(`SMS response | status: ${smsInfo.status} | sid: ${smsInfo.sid}`);
+            // console.log(smsInfo)
+            // console.log(`SMS response | status: ${smsInfo.status} | sid: ${smsInfo.sid}`);
         }catch (e) {
             console.error(`SMS error | to ${phone} | error: ${e}`);
         }

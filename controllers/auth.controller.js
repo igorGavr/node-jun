@@ -11,7 +11,7 @@ module.exports = {
             const { password } = req.body;
 
             // посилаємо емейл на адресу                 кому ,       назва темплейту,    зміні які є в темплейті
-            await emailService.sendMail(email, WELCOME, {userName: name}); // TEST CODE
+            //await emailService.sendMail(email, WELCOME, {userName: name}); // TEST CODE
             // await emailService.sendMail(email, WELCOME); // REAL CODE
 
 

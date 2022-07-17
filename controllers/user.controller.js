@@ -21,13 +21,13 @@ module.exports = {
             const { password, phone, name } = req.body;
             // хешуємо пароль
             const hash = await passwordService.hashPassword(password)
-
+            console.log(hash)
             // записуємо нового юзера в табл. User перетираючи пароль захешованим паролем
             const newUser = await userService.createUser({...req.body, password: hash})
 
-            const sms = smsTemplateBuilder[smsActionTypeEnum.WELCOME](name);
-
-            await smsService.sendSMS(phone, sms)
+            // const sms = smsTemplateBuilder[smsActionTypeEnum.WELCOME](name);
+            //
+            // await smsService.sendSMS(phone, sms)
 
             // віддаємо нового юзера згідно шаблону
             const userForResponse = userPresenter(newUser)

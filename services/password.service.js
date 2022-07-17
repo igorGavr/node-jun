@@ -9,7 +9,7 @@ module.exports = {
             .compare(password, hashPassword);
 
         if (!isPasswordsSame) {
-            throw new CustomError(`Wrong email or password`);
+            throw new CustomError(`Wrong email or password `);
         }
     }
 }
