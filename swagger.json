@@ -1,0 +1,162 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "DEC-2021"
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "operationId": "getAllUsers",
+        "parameters": [
+          {
+            "type": "number",
+            "in": "query",
+            "name": "page",
+            "default": 1,
+            "description": "Page Number"
+          },
+          {
+            "type": "number",
+            "in": "query",
+            "name": "perPage",
+            "default": 20,
+            "required": true,
+            "description": "itemPerPage"
+          },
+          {
+            "type": "number",
+            "in": "query",
+            "name": "ageGte",
+            "description": "itemPerPage"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "properties": {
+                "page": {
+                  "type": "number",
+                  "example": 1
+                },
+                "parPage": {
+                  "type": "number",
+                  "example": 20
+                },
+                "data": {
+                  "items": {
+                    "$ref": "#/definitions/User"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "type": "number",
+                  "example": 400
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Somethign goes wrong"
+                }
+              }
+            },
+            "description": "some error"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "operationId": "createUser",
+        "parameters": [
+          {
+            "type": "string",
+            "in": "formData",
+            "name": "name",
+            "required": true
+          },
+          {
+            "type": "number",
+            "in": "formData",
+            "name": "age",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "operationId": "getUserById",
+        "parameters": [
+          {
+            "type": "string",
+            "in": "path",
+            "name": "id",
+            "description": "User ID",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "type": "number",
+                  "example": 400
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Somethign goes wrong"
+                }
+              }
+            },
+            "description": "some error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "properties": {
+        "_id": {
+          "type": "string",
+          "example": "56789ghjkl",
+          "description": "MongoId"
+        },
+        "age": {
+          "type": "number",
+          "example": 18
+        }
+      }
+    }
+  }
+}

@@ -12,14 +12,15 @@
 // В основном он используется для настройки промежуточного
 // программного обеспечения для вашего приложения.
 
-const express = require('express')
-const mongoose = require('mongoose')
+const express = require('express');
+const mongoose = require('mongoose');
+const swaggerUi = require('swagger-ui-express');
 const path = require("path");
 // для динамічного підключення .env файлів
 require('dotenv').config({
     path: path.join(process.cwd(), 'environments', `${process.env.MODE}.env`)});
 // файли .env повинні бути обовязково вище  configs
-
+const swaggerJson = require("./swagger.json")
 
 const {authRouter, userRouter } = require("./routes");
 const { configs } = require('./configs');
@@ -32,6 +33,9 @@ app.use(express.json())  // вчу апку розпізнавати json
 
 app.use('/auth', authRouter);  // підключаємо роутер який буде обробляти всі запити на /auth
 app.use('/users', userRouter)  // підключаємо роутер який буде обробляти всі запити на /users
+
+app.use('./docs', swaggerUi.serve, swaggerUi.setup(swaggerJson))
+
 
 app.use('*', (req, res) => {   // якщо шлях не знайдено то видаємо 404-тий статус
     res.status(404).json('Page not found (');

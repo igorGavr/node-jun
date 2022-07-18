@@ -7,10 +7,11 @@ module.exports = {
     allUsers: async (req, res, next) => {
         try{
             // шукаємо всіх юзерів та приводимо монго-обєкт в звичайний масив за допомогою .exec()
-            const users = await userService.findUsers(req.query).exec()
+            const users = await userService.findUsersWithPagination(req.query)
             // мапаємо масив та приводимо його до нашого шаблону для виводу інфи
-            const usersForResponse = users.map(u => userPresenter(u))
-            res.json(usersForResponse)
+            //const usersForResponse = users.map(u => userPresenter(u))
+            //console.log(usersForResponse)
+            res.json(users)
         }catch (e) {
             next(e)
         }

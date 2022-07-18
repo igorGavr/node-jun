@@ -13,4 +13,6 @@ module.exports = {
         .regex(constants.PASSWORD_REGEX).required().trim(),
     phoneValidator: Joi.string()
         .regex(constants.PHONE_REGEX).required().trim(),
+    queryPageValidator: Joi.number().integer().min(1),
+    queryPerPageValidator: Joi.number().integer().min(1)
 };

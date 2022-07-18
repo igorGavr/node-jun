@@ -1,11 +1,14 @@
 const Joi = require('joi')
 
-const {emailValidator, nameValidator, ageValidator} = require('./common.validator')
+const {emailValidator, nameValidator, ageValidator, queryPageValidator,
+    queryPerPageValidator} = require('./common.validator')
 
 module.exports = {
     findAll: Joi.object({
         name: nameValidator,
         age: ageValidator,
-        email: emailValidator
+        email: emailValidator,
+        page: queryPageValidator,
+        perPage: queryPerPageValidator
     })
 }
